@@ -8,19 +8,20 @@ import java.util.List;
 
 public class UserDAO implements UserDAOInt {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/userinformation";
-    private static final String USER = "root";
-    private static final String PASSWORD = "password";
+    private static  String URL = "jdbc:mysql://localhost:3306/userinformation";
+    private static  String USER = "root";
+    private static  String PASSWORD = "12345678";
 
     @Override
     public void addUser(User user) {
-        String sql = "INSERT INTO customers (firstname, lastname, email, phone) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO customers (firstname, lastname, email, phone, password) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
             pstmt.setString(3, user.getEmail());
             pstmt.setString(4, user.getPhoneNumber());
+            pstmt.setString(5, user.getPassword()); // Set password
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,7 +41,8 @@ public class UserDAO implements UserDAOInt {
                         rs.getString("firstname"),
                         rs.getString("lastname"),
                         rs.getString("email"),
-                        rs.getString("phone")
+                        rs.getString("phone"),
+                        rs.getString("password") // Get password
                 );
             }
         } catch (SQLException e) {
@@ -62,7 +64,8 @@ public class UserDAO implements UserDAOInt {
                         rs.getString("firstname"),
                         rs.getString("lastname"),
                         rs.getString("email"),
-                        rs.getString("phone")
+                        rs.getString("phone"),
+                        rs.getString("password")
                 ));
             }
         } catch (SQLException e) {
@@ -73,14 +76,15 @@ public class UserDAO implements UserDAOInt {
 
     @Override
     public void updateUser(User user) {
-        String sql = "UPDATE customers SET firstname = ?, lastname = ?, email = ?, phone = ? WHERE user_id = ?";
+        String sql = "UPDATE customers SET firstname = ?, lastname = ?, email = ?, phone = ?, password = ? WHERE user_id = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
             pstmt.setString(3, user.getEmail());
             pstmt.setString(4, user.getPhoneNumber());
-            pstmt.setInt(5, user.getUserId());
+            pstmt.setString(5, user.getPassword()); // Set password
+            pstmt.setInt(6, user.getUserId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
