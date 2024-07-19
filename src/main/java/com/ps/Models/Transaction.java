@@ -64,4 +64,10 @@ public class Transaction {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return String.format("| %-6d | %-10s | %-8s | %-15s | %-15s | %10.2f |",
+                UserId, date, time, product, vendor, price);
+    }
 }

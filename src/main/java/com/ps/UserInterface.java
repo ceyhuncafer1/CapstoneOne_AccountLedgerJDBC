@@ -2,29 +2,34 @@ package com.ps;
 
 import com.ps.DAO.TransactionDAO;
 import com.ps.DAO.UserDAO;
+import com.ps.DAO.interfaces.UserDAOInt;
 import com.ps.Models.Transaction;
 import com.ps.Models.User;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
-    private static UserDAO userDAO;
+    private static UserDAOInt userDAO;
     private static TransactionDAO transactionDAO;
     private static Scanner scanner = new Scanner(System.in);
 
-    User loggedInUser = null;
+    private User loggedInUser = null;
 
-    public static void init (String[] args){
+    public static void init(String[] args) {
         BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl("jdbc:mysql://localhost:3306/userinformation");
         basicDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         basicDataSource.setUsername(args[0]);
         basicDataSource.setPassword(args[1]);
+
+        userDAO = new UserDAO(basicDataSource);
+        transactionDAO = new TransactionDAO(basicDataSource);
     }
 
-    public void display(String[] args){
+    public void display(String[] args) {
         init(args);
 
         if (!login()) {
@@ -34,7 +39,7 @@ public class UserInterface {
 
         String input;
         do {
-            System.out.println("\n Welcome to the Online Accounting Ledger System, " + loggedInUser.getFirstName() + "!\n");
+            System.out.println("\nWelcome to the Online Accounting Ledger System, " + loggedInUser.getFirstName() + "!\n");
             System.out.println("\tD) Add Deposit");
             System.out.println("\tP) Make a Payment");
             System.out.println("\tL) Ledger");
@@ -42,7 +47,7 @@ public class UserInterface {
 
             input = scanner.nextLine().toUpperCase();
 
-            switch (input){
+            switch (input) {
                 case "D":
                     addDeposit();
                     break;
@@ -69,7 +74,8 @@ public class UserInterface {
         System.out.println("Enter your password:");
         String password = scanner.nextLine();
 
-        for (User user : userDAO.getAllUsers()) {
+        List<User> users = userDAO.getAllUsers();
+        for (User user : users) {
             if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
                 loggedInUser = user;
                 return true;
@@ -77,8 +83,6 @@ public class UserInterface {
         }
         return false;
     }
-
-
 
     private void addDeposit() {
         System.out.println("Enter date (YYYY-MM-DD):");
@@ -115,11 +119,11 @@ public class UserInterface {
     }
 
     private void displayLedger() {
-        ArrayList<Transaction> transactions = new ArrayList<>(transactionDAO.getAllTransactions());
+        List<Transaction> transactions = transactionDAO.getAllTransactions();
         if (transactions.isEmpty()) {
             System.out.println("No transactions found.");
         } else {
-            System.out.println("\n Ledger: ");
+            System.out.println("\nLedger:");
             for (Transaction transaction : transactions) {
                 System.out.println(transaction);
             }
