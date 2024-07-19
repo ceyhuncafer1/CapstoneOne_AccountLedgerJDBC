@@ -4,18 +4,29 @@ import com.ps.DAO.TransactionDAO;
 import com.ps.DAO.UserDAO;
 import com.ps.Models.Transaction;
 import com.ps.Models.User;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserInterface {
-    ArrayList<Transaction> transactionLibrary = new ArrayList<>();
-    Scanner scanner = new Scanner(System.in);
-    TransactionDAO transactionDAO = new TransactionDAO();
-    UserDAO userDAO = new UserDAO();
+    private static UserDAO userDAO;
+    private static TransactionDAO transactionDAO;
+    private static Scanner scanner = new Scanner(System.in);
+
     User loggedInUser = null;
 
-    public void display(){
+    public static void init (String[] args){
+        BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setUrl("jdbc:mysql://localhost:3306/userinformation");
+        basicDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        basicDataSource.setUsername(args[0]);
+        basicDataSource.setPassword(args[1]);
+    }
+
+    public void display(String[] args){
+        init(args);
+
         if (!login()) {
             System.out.println("Invalid credentials. Exiting...");
             return;
@@ -66,6 +77,8 @@ public class UserInterface {
         }
         return false;
     }
+
+
 
     private void addDeposit() {
         System.out.println("Enter date (YYYY-MM-DD):");
