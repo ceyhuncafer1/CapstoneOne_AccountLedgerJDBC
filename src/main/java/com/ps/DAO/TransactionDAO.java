@@ -1,30 +1,25 @@
 package com.ps.DAO;
 
 import com.ps.DAO.interfaces.TransactionDAOInt;
-
 import com.ps.Models.Transaction;
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionDAO implements TransactionDAOInt {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/userinformation";
-    private static final String USER = "root";
-    private static final String PASSWORD = "password";
+    private BasicDataSource dataSource;
 
-    static {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public TransactionDAO(BasicDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
     public void addTransaction(Transaction transaction) {
         String query = "INSERT INTO transactions (user_id, date, time, product, vendor, price) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, transaction.getUserId());
             stmt.setString(2, transaction.getDate());
@@ -41,7 +36,7 @@ public class TransactionDAO implements TransactionDAOInt {
     @Override
     public Transaction getTransactionById(int id) {
         String query = "SELECT * FROM transactions WHERE user_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -65,7 +60,7 @@ public class TransactionDAO implements TransactionDAOInt {
     public List<Transaction> getAllTransactions() {
         List<Transaction> transactions = new ArrayList<>();
         String query = "SELECT * FROM transactions";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
@@ -87,7 +82,7 @@ public class TransactionDAO implements TransactionDAOInt {
     @Override
     public void updateTransaction(Transaction transaction) {
         String query = "UPDATE transactions SET date = ?, time = ?, product = ?, vendor = ?, price = ? WHERE user_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, transaction.getDate());
             stmt.setString(2, transaction.getTime());
@@ -104,7 +99,7 @@ public class TransactionDAO implements TransactionDAOInt {
     @Override
     public void deleteTransaction(int id) {
         String query = "DELETE FROM transactions WHERE user_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

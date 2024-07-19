@@ -10,41 +10,44 @@ CREATE TABLE customers (
     lastname VARCHAR(255) NOT NULL,
     email VARCHAR(50) NOT NULL,
     phone VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     PRIMARY KEY (user_id)
 );
 
 CREATE TABLE transactions (
-    user_id INT NOT NULL AUTO_INCREMENT,
+    transaction_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
     date VARCHAR(50) NOT NULL,
     time VARCHAR(25) NOT NULL,
     product VARCHAR(50) NOT NULL,
     vendor VARCHAR(50) NOT NULL,
-   price double NOT NULL,
-   FOREIGN KEY (user_id) REFERENCES customers(user_id)
+    price DOUBLE NOT NULL,
+    PRIMARY KEY (transaction_id), -- Added primary key
+    FOREIGN KEY (user_id) REFERENCES customers(user_id)
 );
 
-INSERT INTO customers (user_id, firstname, lastname, email, phone)
+INSERT INTO customers (user_id, firstname, lastname, email, phone, password)
 VALUES
-(1, 'John', 'Doe', 'johndoe@example.com', '123-456-7890'),
-(2, 'Jane', 'Smith', 'janesmith@example.com', '234-567-8901'),
-(3, 'Michael', 'Johnson', 'michaeljohnson@example.com', '345-678-9012'),
-(4, 'Emily', 'Brown', 'emilybrown@example.com', '456-789-0123'),
-(5, 'Daniel', 'Davis', 'danieldavis@example.com', '567-890-1234'),
-(6, 'Sarah', 'Miller', 'sarahmiller@example.com', '678-901-2345'),
-(7, 'David', 'Wilson', 'davidwilson@example.com', '789-012-3456'),
-(8, 'Jessica', 'Moore', 'jessicamoore@example.com', '890-123-4567'),
-(9, 'Matthew', 'Taylor', 'matthewtaylor@example.com', '901-234-5678'),
-(10, 'Amanda', 'Thomas', 'amandathomas@example.com', '012-345-6789'),
-(11, 'Ryan', 'Anderson', 'ryananderson@example.com', '123-456-7890'),
-(12, 'Elizabeth', 'Jackson', 'elizabethjackson@example.com', '234-567-8901'),
-(13, 'Christopher', 'White', 'christopherwhite@example.com', '345-678-9012'),
-(14, 'Megan', 'Harris', 'meganharris@example.com', '456-789-0123'),
-(15, 'Kevin', 'Martinez', 'kevinmartinez@example.com', '567-890-1234'),
-(16, 'Jennifer', 'Clark', 'jenniferclark@example.com', '678-901-2345'),
-(17, 'Joshua', 'Lewis', 'joshualewis@example.com', '789-012-3456'),
-(18, 'Nicole', 'Walker', 'nicolewalker@example.com', '890-123-4567'),
-(19, 'Andrew', 'Young', 'andrewyoung@example.com', '901-234-5678'),
-(20, 'Samantha', 'Allen', 'samanthaallen@example.com', '012-345-6789');
+(1, 'John', 'Doe', 'johndoe@example.com', '123-456-7890', 'password123'),
+(2, 'Jane', 'Smith', 'janesmith@example.com', '234-567-8901', 'password123'),
+(3, 'Michael', 'Johnson', 'michaeljohnson@example.com', '345-678-9012', 'password123'),
+(4, 'Emily', 'Brown', 'emilybrown@example.com', '456-789-0123', 'password123'),
+(5, 'Daniel', 'Davis', 'danieldavis@example.com', '567-890-1234', 'password123'),
+(6, 'Sarah', 'Miller', 'sarahmiller@example.com', '678-901-2345', 'password123'),
+(7, 'David', 'Wilson', 'davidwilson@example.com', '789-012-3456', 'password123'),
+(8, 'Jessica', 'Moore', 'jessicamoore@example.com', '890-123-4567', 'password123'),
+(9, 'Matthew', 'Taylor', 'matthewtaylor@example.com', '901-234-5678', 'password123'),
+(10, 'Amanda', 'Thomas', 'amandathomas@example.com', '012-345-6789', 'password123'),
+(11, 'Ryan', 'Anderson', 'ryananderson@example.com', '123-456-7890', 'password123'),
+(12, 'Elizabeth', 'Jackson', 'elizabethjackson@example.com', '234-567-8901', 'password123'),
+(13, 'Christopher', 'White', 'christopherwhite@example.com', '345-678-9012', 'password123'),
+(14, 'Megan', 'Harris', 'meganharris@example.com', '456-789-0123', 'password123'),
+(15, 'Kevin', 'Martinez', 'kevinmartinez@example.com', '567-890-1234', 'password123'),
+(16, 'Jennifer', 'Clark', 'jenniferclark@example.com', '678-901-2345', 'password123'),
+(17, 'Joshua', 'Lewis', 'joshualewis@example.com', '789-012-3456', 'password123'),
+(18, 'Nicole', 'Walker', 'nicolewalker@example.com', '890-123-4567', 'password123'),
+(19, 'Andrew', 'Young', 'andrewyoung@example.com', '901-234-5678', 'password123'),
+(20, 'Samantha', 'Allen', 'samanthaallen@example.com', '012-345-6789', 'password123');
 
 INSERT INTO transactions (user_id, date, time, product, vendor, price)
 VALUES
